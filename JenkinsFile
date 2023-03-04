@@ -1,12 +1,12 @@
 pipeline{
     agent any
-    environment {
-        DOCKERHUB_USERNAME= 'bopgeek'
-        APP_NAME = 'flaskargocd'
-        IMAGE_TAG =  "${BUILD_NUMBER}"
-        IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" +'${APP_NAME}'
-        REGISTRY_CREDS = 'dockerhub'
-    }
+    // environment {
+    //     DOCKERHUB_USERNAME= 'bopgeek'
+    //     APP_NAME = 'flaskargocd'
+    //     IMAGE_TAG =  "${BUILD_NUMBER}"
+    //     IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" +'${APP_NAME}'
+    //     REGISTRY_CREDS = 'dockerhub'
+    // }
     stages{
         stage("cleaning the workspace"){
             steps{
@@ -49,9 +49,6 @@ pipeline{
                 echo "====++++executing build docker image++++===="
 
                 script{
-                    // sh 'docker image build -t ${IMAGE_NAME}:$BUILD_ID .'
-                    // sh 'docker image tag ${IMAGE_NAME}:$BUILD_ID ${IMAGE_NAME}:latest'
-
                     sh "docker image build -t $JOB_NAME:$BUILD_ID ."
                     sh "docker image tag $JOB_NAME:$BUILD_ID bopgeek/$JOB_NAME:$BUILD_ID"
                     sh "docker image tag $JOB_NAME:$BUILD_ID bopgeek/$JOB_NAME:latest"
@@ -69,29 +66,29 @@ pipeline{
         
             }
         }
-        stage("docker push"){
-            steps{
-                echo "====++++executing docker push++++===="
-                script{
+        // stage("docker push"){
+        //     steps{
+        //         echo "====++++executing docker push++++===="
+        //         script{
 
-                    withCredentials([string(credentialsId: 'dockerhub_pwd', variable: 'dockerhub_cred')]) {
-                        // some block
-                        sh 'docker login -u bopgeek -p ${dockerhub_cred}'
-                        sh 'docker image push ${IMAGE_NAME}:$BUILD_ID'
-                        sh 'docker image push ${IMAGE_NAME}:latest'
-                    }
-                }
-            }
-            post{
-                success{
-                    echo "====++++docker push executed successfully++++===="
-                }
-                failure{
-                    echo "====++++docker push execution failed++++===="
-                }
+        //             withCredentials([string(credentialsId: 'dockerhub_pwd', variable: 'dockerhub_cred')]) {
+        //                 // some block
+        //                 sh 'docker login -u bopgeek -p ${dockerhub_cred}'
+        //                 sh 'docker image push ${IMAGE_NAME}:$BUILD_ID'
+        //                 sh 'docker image push ${IMAGE_NAME}:latest'
+        //             }
+        //         }
+        //     }
+        //     post{
+        //         success{
+        //             echo "====++++docker push executed successfully++++===="
+        //         }
+        //         failure{
+        //             echo "====++++docker push execution failed++++===="
+        //         }
         
-            }
-        }
+        //     }
+        // }
     }
     post{
         success{
