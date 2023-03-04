@@ -49,8 +49,8 @@ pipeline{
                 echo "====++++executing build docker image++++===="
 
                 script{
-                    sh 'docker image build -t $IMAGE_NAME:$BUILD_ID .'
-                    sh 'docker image tag $IMAGE_NAME:$BUILD_ID $IMAGE_NAME:latest'
+                    sh 'docker image build -t ${IMAGE_NAME}:$BUILD_ID .'
+                    sh 'docker image tag ${IMAGE_NAME}:$BUILD_ID ${IMAGE_NAME}:latest'
                 }
                   
                 }
@@ -73,8 +73,8 @@ pipeline{
                     withCredentials([string(credentialsId: 'dockerhub_pwd', variable: 'dockerhub_cred')]) {
                         // some block
                         sh 'docker login -u bopgeek -p ${dockerhub_cred}'
-                        sh 'docker image push $IMAGE_NAME:$BUILD_ID'
-                        sh 'docker image push $IMAGE_NAME:latest'
+                        sh 'docker image push ${IMAGE_NAME}:$BUILD_ID'
+                        sh 'docker image push ${IMAGE_NAME}:latest'
                     }
                 }
             }
