@@ -49,9 +49,9 @@ pipeline{
                 echo "====++++executing build docker image++++===="
 
                 script{
-                    sh "docker image build -t $pythonargocd:$BUILD_ID ."
-                    sh "docker image tag $JOB_NAME:$BUILD_ID bopgeek/$pythonargocd:$BUILD_ID"
-                    sh "docker image tag $JOB_NAME:$BUILD_ID bopgeek/$pythonargocd:latest"
+                    sh "docker image build -t pythonargocd:$BUILD_ID ."
+                    sh "docker image tag pythonargocd:$BUILD_ID bopgeek/pythonargocd:$BUILD_ID"
+                    sh "docker image tag pythonargocd:$BUILD_ID bopgeek/pythonargocd:latest"
                 }
                   
                 }
