@@ -65,9 +65,11 @@ pipeline{
         stage("docker push"){
             steps{
                 echo "====++++executing docker push++++===="
-                docker.withRegistry("", REGISTRY_CREDS){
-                    docker.image.push("$BUILD_NUMBER")
-                    docker.image.push("latest")
+                script{
+                    docker.withRegistry("", REGISTRY_CREDS){
+                        docker.image.push("$BUILD_NUMBER")
+                        docker.image.push("latest")
+                    }
                 }
             }
             post{
