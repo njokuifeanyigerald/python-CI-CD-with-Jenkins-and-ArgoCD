@@ -49,8 +49,12 @@ pipeline{
                 echo "====++++executing build docker image++++===="
 
                 script{
-                    sh 'docker image build -t ${IMAGE_NAME}:$BUILD_ID .'
-                    sh 'docker image tag ${IMAGE_NAME}:$BUILD_ID ${IMAGE_NAME}:latest'
+                    // sh 'docker image build -t ${IMAGE_NAME}:$BUILD_ID .'
+                    // sh 'docker image tag ${IMAGE_NAME}:$BUILD_ID ${IMAGE_NAME}:latest'
+
+                    sh "docker image build -t $JOB_NAME:$BUILD_ID ."
+                    sh "docker image tag $JOB_NAME:$BUILD_ID bopgeek/$JOB_NAME:$BUILD_ID"
+                    sh "docker image tag $JOB_NAME:$BUILD_ID bopgeek/$JOB_NAME:latest"
                 }
                   
                 }
