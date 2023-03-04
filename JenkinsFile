@@ -49,7 +49,10 @@ pipeline{
                 echo "====++++executing build docker image++++===="
 
                 script{
-                    docker_image = docker.build "${IMAGE_NAME}"
+                    sh 'docker image build -t $IMAGE_NAME:$BUILD_ID .'
+                    sh 'docker image tag $IMAGE_NAME:$BUILD_ID $IMAGE_NAME:latest'
+                }
+                  
                 }
             }
             post{
@@ -66,9 +69,12 @@ pipeline{
             steps{
                 echo "====++++executing docker push++++===="
                 script{
-                    docker.withRegistry("", REGISTRY_CREDS){
-                        docker.image.push("$BUILD_NUMBER")
-                        docker.image.push("latest")
+
+                    withCredentials([string(credentialsId: 'dockerhub_pwd', variable: 'dockerhub_cred')]) {
+                        // some block
+                        sh 'docker login -u bopgeek -p ${dockerhub_cred}'
+                        sh 'docker image push $IMAGE_NAME:$BUILD_ID'
+                        sh 'docker image push $IMAGE_NAME:latest'
                     }
                 }
             }
