@@ -5,8 +5,26 @@ pipeline{
         APP_NAME = 'flaskArgoCD'
         IMAGE_TAG =  "${BUILD_NUMBER}"
         IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" +'${APP_NAME}'
+        REGISTRY_CREDS = 'dockerhub'
     }
     stages{
+        stage("cleaning the workspace"){
+            steps{
+                echo "====++++executing cleaning the workspace++++===="
+                script{
+                    cleanWs()
+                }
+            }
+            post{
+                success{
+                    echo "====++++cleaning the workspace executed successfully++++===="
+                }
+                failure{
+                    echo "====++++cleaning the workspace execution failed++++===="
+                }
+        
+            }
+        }
         stage("git repo checkout"){
             steps{
                 echo "====++++git repo checkout++++===="
@@ -26,19 +44,38 @@ pipeline{
                 }
             }
         }
-        stage("cleaning the workspace"){
+        stage("build docker image"){
             steps{
-                echo "====++++executing cleaning the workspace++++===="
+                echo "====++++executing build docker image++++===="
+
                 script{
-                    cleanWs()
+                    docker_image = docker.build "${IMAGE_NAME}"
                 }
             }
             post{
                 success{
-                    echo "====++++cleaning the workspace executed successfully++++===="
+                    echo "====++++build docker image executed successfully++++===="
                 }
                 failure{
-                    echo "====++++cleaning the workspace execution failed++++===="
+                    echo "====++++build docker image execution failed++++===="
+                }
+        
+            }
+        }
+        stage("docker push"){
+            steps{
+                echo "====++++executing docker push++++===="
+                docker.withRegistry("", REGISTRY_CREDS){
+                    docker.image.push("$BUILD_NUMBER")
+                    docker.image.push("latest")
+                }
+            }
+            post{
+                success{
+                    echo "====++++docker push executed successfully++++===="
+                }
+                failure{
+                    echo "====++++docker push execution failed++++===="
                 }
         
             }

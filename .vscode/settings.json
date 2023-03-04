@@ -9,7 +9,7 @@
     "jenkins-runner.hostConfigs": {
         // make sure the name matches with the one of "runWith" tag
         "jenkins-master": {
-            "url": "http://127.0.0.1:9999",
+            "url": "http://127.0.0.1:8080",
             "user": "codebygerald",
             "password" : "12345",
             "userCrumbIssuer": true
