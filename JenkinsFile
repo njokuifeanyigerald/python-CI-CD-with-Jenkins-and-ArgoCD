@@ -139,7 +139,7 @@ pipeline{
                 echo "====++++executing pushing the changed deployment to github++++===="
                 script{
                     sh """
-                        git config ---global user.name "njokuifeanyigerald"
+                        git config --global user.name "njokuifeanyigerald"
                         git config --global user.email "brainboyrichmond@gmail.com"
                         git add deployment.yaml
                         git commit -m 'updated the deployment file'
