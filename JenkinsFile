@@ -73,9 +73,11 @@ pipeline{
 
                     withCredentials([string(credentialsId: 'dockerhub_pwd', variable: 'dockerhub_cred')]) {
                         // some block
-                        sh 'docker login -u bopgeek -p ${dockerhub_cred}'
-                        sh 'docker image push bopgeek/$APP_NAME:$BUILD_ID'
-                        sh 'docker image push bopgeek/$APP_NAME:latest'
+                        sh """
+                        docker login -u bopgeek -p ${dockerhub_cred}
+                        docker image push bopgeek/$APP_NAME:$BUILD_ID
+                        docker image push bopgeek/$APP_NAME:latest
+                        """
                     }
                 }
             }
@@ -85,6 +87,48 @@ pipeline{
                 }
                 failure{
                     echo "====++++docker push execution failed++++===="
+                }
+        
+            }
+        }
+        stage("delete docker image in local machine"){
+            steps{
+                echo "====++++executing delete docker image in local machine++++===="
+                script{
+                    sh """
+                    docker rmi -f bopgeek/$APP_NAME:$BUILD_ID
+                    docker rmi -f bopgeek/$APP_NAME:latest
+                    """
+                }
+            }
+            post{
+                success{
+                    echo "====++++delete docker image in local machine executed successfully++++===="
+                }
+                failure{
+                    echo "====++++delete docker image in local machine execution failed++++===="
+                }
+        
+            }
+        }
+        stage("updating k8s deployment file"){
+            steps{
+                echo "====++++executing updating k8s deployment file++++===="
+                // if any image part of the manifest matches the app name, it should
+                //  update the app name and its version using build number
+                script{
+                    sh """
+                        cat deployment.yaml
+                        sed -i 's/${APP_NAME}.*/${APP_NAME}:$BUILD_ID/g' deployment.yaml
+                    """
+                }
+            }
+            post{
+                success{
+                    echo "====++++updating k8s deployment file executed successfully++++===="
+                }
+                failure{
+                    echo "====++++updating k8s deployment file execution failed++++===="
                 }
         
             }

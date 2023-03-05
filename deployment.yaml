@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: flaskweb
-        image: bopgeek/flask-web:v1
+        image: bopgeek/pythonargocd:tagname
         resources:
           limits:
             memory: "128Mi"
