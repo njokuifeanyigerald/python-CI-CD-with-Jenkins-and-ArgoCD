@@ -144,8 +144,11 @@ pipeline{
                         git add deployment.yaml
                         git commit -m 'updated the deployment file'
                     """
-                    withCredentials([gitUsernamePassword(credentialsId: 'github-access', gitToolName: 'git')]) {
-                        sh "git push -u https://github.com/njokuifeanyigerald/python-CI-CD-with-Jenkins-and-ArgoCD.git master"
+                    // withCredentials([gitUsernamePassword(credentialsId: 'github-access', gitToolName: 'git')]) {
+                    //     sh "git push -u https://github.com/njokuifeanyigerald/python-CI-CD-with-Jenkins-and-ArgoCD.git master"
+                    // }
+                    withCredentials([gitUsernamePassword(credentialsId: 'github-access-tokon', gitToolName: 'git')]) {
+                        sh "git push https://github.com/njokuifeanyigerald/python-CI-CD-with-Jenkins-and-ArgoCD.git master"
                     }
                 }
             }
