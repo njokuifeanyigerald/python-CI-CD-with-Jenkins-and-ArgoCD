@@ -120,6 +120,7 @@ pipeline{
                     sh """
                         cat deployment.yaml
                         sed -i 's/${APP_NAME}.*/${APP_NAME}:$BUILD_ID/g' deployment.yaml
+                        cat deployment.yaml
                     """
                 }
             }
