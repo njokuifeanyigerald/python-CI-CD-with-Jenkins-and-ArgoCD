@@ -134,6 +134,31 @@ pipeline{
         
             }
         }
+        stage("pushing the changed deployment to github"){
+            steps{
+                echo "====++++executing pushing the changed deployment to github++++===="
+                script{
+                    sh """
+                        git config ---global user.name "njokuifeanyigerald"
+                        git config --global user.email "brainboyrichmond@gmail.com"
+                        git add deployment.yaml
+                        git commit -m 'updated the deployment file'
+                    """
+                    withCredentials([gitUsernamePassword(credentialsId: 'github-access', gitToolName: 'git')]) {
+                        sh "git push -u https://github.com/njokuifeanyigerald/python-CI-CD-with-Jenkins-and-ArgoCD.git master"
+                    }
+                }
+            }
+            post{
+                success{
+                    echo "====++++pushing the changed deployment to github executed successfully++++===="
+                }
+                failure{
+                    echo "====++++pushing the changed deployment to github execution failed++++===="
+                }
+        
+            }
+        }
     }
     post{
         success{
